@@ -20,7 +20,7 @@ var binder = new AppStateBinder({
       }
       console.log("refresh canvas with " + theme + " theme");
     }
-  }
+  },
   showGrid : {
     flag : "showGrid",
     changed : function() {
