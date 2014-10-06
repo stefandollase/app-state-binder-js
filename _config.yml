@@ -1,6 +1,6 @@
 # Site settings
 title: "Application State Binder"
-description: "This is the project page of my app-state-binder-js library, with reveals the application state in the hash of the url."
+description: "This is the project page of my app-state-binder-js library, which reveals the application state in the hash of the url."
 url: "http://stefandollase.github.io" # the base hostname & protocol for your site
 baseurl: "/app-state-binder-js" # the subpath of your site, e.g. /blog/
 
