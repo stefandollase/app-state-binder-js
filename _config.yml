@@ -1,14 +1,14 @@
 # Site settings
-title: "Your awesome title"
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
-url: "http://yourdomain.com" # the base hostname & protocol for your site
-baseurl: "" # the subpath of your site, e.g. /blog/
+title: "Application State Binder"
+description: "This is the project page of my app-state-binder-js library, with reveals the application state in the hash of the url."
+url: "http://stefandollase.github.io" # the base hostname & protocol for your site
+baseurl: "/app-state-binder-js" # the subpath of your site, e.g. /blog/
 
 # About the author
-author_fullname: "Page Owner"
-author_address: [ "My Street 123", "12345 My City" ]
-email: "your-email@domain.com"
-github_username: "jekyll"
+author_fullname: "Stefan Dollase"
+author_address: [ "Harscampstraße 22", "52062 Aachen" ]
+email: "app-state-binder-js@stefandollase.de"
+github_username: "stefandollase"
 
 # Disqus settings
 #disqus_shortname: ""
