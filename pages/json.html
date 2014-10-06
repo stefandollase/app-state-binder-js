@@ -1,0 +1,52 @@
+---
+layout: default
+title: JSON Example
+permalink: /json/
+menuOrder: 2
+---
+<h1>JSON State Entry Example</h1>
+  <div>
+    <label>key: <input class="list-key" type="text" /></label>
+    <label>value: <input class="list-value" type="text" /></label>
+    <button class="add-to-list">add</button>
+    <button class="clear-list">clear list</button>
+  </div>
+
+  <ul class="list">
+  </ul>
+
+  <script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
+  <script>
+    var binder = new AppStateBinder({
+      list: {
+      json: "json",
+        changed : function(dataValue) {
+          console.log(dataValue);
+          html.list.empty();
+          for (var key in dataValue) {
+            var li = $('<li/>');
+            li.text(key + " -> " + dataValue[key]);
+            html.list.append(li);
+          }
+        }
+      }
+    });
+    
+    var html = {
+      listKey: $(".list-key"),
+      listValue: $(".list-value"),
+      addToList: $(".add-to-list"),
+      clearList: $(".clear-list"),
+      list: $(".list"),
+    };
+    html.addToList.click(function() {
+      var list = binder.get("list") || {};
+      list[html.listKey.val()] = html.listValue.val();
+      binder.set("list", list);
+    });
+    html.clearList.click(function() {
+      binder.unset("list");
+    });
+    
+    binder.fireChangedForAll();
+  </script>

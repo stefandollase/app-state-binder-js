@@ -1,0 +1,111 @@
+---
+layout: default
+title: Box Example
+permalink: /box/
+menuOrder: 1
+---
+<h1>Flag, Option and Custom State Entry Example</h1>
+  <ul style="display:block;">
+    <li>
+      <select class="boxColor">
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="blue">Blue</option>
+        <option value="yellow">Yellow</option>
+      </select>
+    </li>
+    <li>
+      <label><input class="showBox" type="checkbox" />show box</label>
+    </li>
+    <li>
+      <label>gap: <input class="gap" type="text" /> px</label>
+    </li>
+  </ul>
+  
+  <div class="theBox" style="width:100px;height:100px;border:1px solid black"></div>
+
+  <script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
+  <script>
+    var binder = new AppStateBinder({
+      boxColor: {
+        option: [ "red", "green", "blue", "yellow" ],
+        changed: function(dataValue) {
+          var boxColor = dataValue || "red";
+          html.boxColor.val(boxColor);
+          html.theBox.css("background-color", boxColor);
+        }
+      },
+      showBox: {
+        flag: "showBox",
+        changed: function(dataValue) {
+          html.showBox.prop("checked", dataValue);
+          html.theBox.css("visibility", dataValue ? "visible" : "hidden");
+        }
+      },
+      gap: {
+        parse: function(stringValue) {
+          if (stringValue.indexOf("px") < 0) {
+            return false;
+          }
+          try {
+            var propertyArray = stringValue.split("px");
+            if ((propertyArray.length !== 2) || (propertyArray[1] !== "")) {
+              return false;
+            }
+            return parseInt(propertyArray[0]);
+          } catch (err) {
+            return false;
+          }
+        },
+        stringify: function(dataValue) {
+          var gap = dataValue || 0;
+          return gap + "px"
+        },
+        changed : function(dataValue) {
+  	      var newGap = getBinderGap();
+          var currentGap = getUIGap();
+          html.theBox.css("margin-left", newGap + "px");
+  	      if (newGap !== 0 || currentGap !== 0) {
+            html.gap.val(newGap);
+  	      }
+        },
+      },
+    });
+    
+    var html = {
+      boxColor: $(".boxColor"),
+      showBox: $(".showBox"),
+      gap: $(".gap"),
+      theBox: $(".theBox"),
+    };
+    html.boxColor.change(function() {
+      binder.set("boxColor", $(this).val());
+    });
+    html.showBox.change(function() {
+      binder.set("showBox", $(this).prop("checked"));
+    });
+    html.gap.keyup(function() {
+	  var newGap = getUIGap();
+      var currentGap = getBinderGap();
+      if (newGap !== 0 || currentGap !== 0) {
+        binder.set("gap", newGap);
+      }
+    });
+    
+    function getUIGap() {
+      var value = html.gap.val();
+      if (value !== "") {
+        try {
+            return parseInt(value);
+        } catch (err) {
+        }
+      }
+      return 0;
+    }
+	    
+    function getBinderGap() {
+      return binder.get("gap") || 0;
+    }
+	    
+    binder.fireChangedForAll();
+  </script>
