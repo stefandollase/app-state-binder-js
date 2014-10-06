@@ -7,15 +7,15 @@ menuOrder: 1
 <h1>Flag, Option and Custom State Entry Example</h1>
   <ul style="display:block;">
     <li>
+      <label><input class="showBox" type="checkbox" />show box</label>
+    </li>
+    <li>
       <select class="boxColor">
         <option value="red">Red</option>
         <option value="green">Green</option>
         <option value="blue">Blue</option>
         <option value="yellow">Yellow</option>
       </select>
-    </li>
-    <li>
-      <label><input class="showBox" type="checkbox" />show box</label>
     </li>
     <li>
       <label>gap: <input class="gap" type="text" /> px</label>
@@ -27,19 +27,19 @@ menuOrder: 1
   <script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
   <script>
     var binder = new AppStateBinder({
+      showBox: {
+        flag: "showBox",
+        changed: function(dataValue) {
+          html.showBox.prop("checked", dataValue);
+          html.theBox.css("visibility", dataValue ? "visible" : "hidden");
+        }
+      },
       boxColor: {
         option: [ "red", "green", "blue", "yellow" ],
         changed: function(dataValue) {
           var boxColor = dataValue || "red";
           html.boxColor.val(boxColor);
           html.theBox.css("background-color", boxColor);
-        }
-      },
-      showBox: {
-        flag: "showBox",
-        changed: function(dataValue) {
-          html.showBox.prop("checked", dataValue);
-          html.theBox.css("visibility", dataValue ? "visible" : "hidden");
         }
       },
       gap: {
@@ -73,16 +73,16 @@ menuOrder: 1
     });
     
     var html = {
-      boxColor: $(".boxColor"),
       showBox: $(".showBox"),
+      boxColor: $(".boxColor"),
       gap: $(".gap"),
       theBox: $(".theBox"),
     };
-    html.boxColor.change(function() {
-      binder.set("boxColor", $(this).val());
-    });
     html.showBox.change(function() {
       binder.set("showBox", $(this).prop("checked"));
+    });
+    html.boxColor.change(function() {
+      binder.set("boxColor", $(this).val());
     });
     html.gap.keyup(function() {
 	  var newGap = getUIGap();
