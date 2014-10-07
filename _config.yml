@@ -19,9 +19,15 @@ markdown: kramdown
 
 # Page Menu Entries
 menu_entries:
+  - url: "/box/"
+    title: Box Example
+  - url: "/json/"
+    title: JSON Example
+  - url: "/"
+    title: Blog
+    useBaseUrl: false
+  - url: "/projects/"
+    title: "Projects"
+    useBaseUrl: false
   - url: "/about/"
-    title: "About1"
-  - url: "/about/"
-    title: "About2"
-  - url: "/about/"
-    title: "About3"
+    title: "About"
