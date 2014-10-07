@@ -1,7 +1,7 @@
 app-state-binder-js
 ===================
 
-Javascript library to reveal the application state in the hash of the url. There are flags, options, json data and custom state entries ([demo](http://stefandollase.github.io/add-state-binder-js/)).
+Javascript library to reveal the application state in the hash of the url. There are flags, options, json data and custom state entries ([demo](http://stefandollase.github.io/app-state-binder-js/)).
 
 ### Example
 
