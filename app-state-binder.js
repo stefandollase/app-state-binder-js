@@ -203,6 +203,15 @@ AppStateBinder.prototype.setupAppState = function(parameters) {
 	} else if (parameters[name].json) {
 	    this.appState[name] = this.createJSON(name,
 		    parameters[name].changed)
+	} else if (parameters[name].number) {
+	    this.appState[name] = this.createNumber(name,
+		    parameters[name].prefix, parameters[name].suffix,
+		    parameters[name].min, parameters[name].max,
+		    parameters[name].changed)
+	} else if (parameters[name].numberObject) {
+	    this.appState[name] = this.createNumberObject(name,
+		    parameters[name].separators, parameters[name].attributes,
+		    parameters[name].ranges, parameters[name].changed)
 	} else {
 	    this.appState[name] = {
 		name : name,
@@ -282,6 +291,126 @@ AppStateBinder.prototype.createJSON = function(name, changed) {
 	    } else {
 		return JSON.stringify(dataValue);
 	    }
+	}
+    }
+}
+AppStateBinder.prototype.createNumber = function(name, prefix, suffix, min,
+	max, changed) {
+    var parseNumberObject = this.parseRegexRanges([ prefix, suffix ],
+	    [ "result" ], {
+		"result" : [ min, max ]
+	    });
+    return {
+	name : name,
+	prefix : prefix,
+	suffix : suffix,
+	min : min,
+	max : max,
+	dataValue : false,
+	stringValue : false,
+	changed : changed,
+	parse : function(stringValue) {
+	    var result = parseNumberObject(stringValue);
+	    if (result === false) {
+		return false;
+	    } else {
+		return result.result;
+	    }
+	},
+	stringify : function(dataValue) {
+	    if (dataValue === false) {
+		return false;
+	    } else {
+		return prefix + dataValue + suffix;
+	    }
+	}
+    }
+}
+AppStateBinder.prototype.createNumberObject = function(name, separators,
+	attributes, ranges, changed) {
+    return {
+	name : name,
+	separators : separators,
+	attributes : attributes,
+	ranges : ranges,
+	dataValue : false,
+	stringValue : false,
+	changed : changed,
+	parse : this.parseRegexRanges(separators, attributes, ranges),
+	stringify : function(dataValue) {
+	    if (dataValue === false) {
+		return false;
+	    } else {
+		var result = "";
+		if (separators.length > 0) {
+		    result += separators[0];
+		    for (var i = 1; i < separators.length
+			    && i <= attributes.length; i++) {
+			result += dataValue[attributes[i - 1]] + separators[i];
+		    }
+		}
+		return result;
+	    }
+	}
+    }
+}
+AppStateBinder.prototype.parseIntMinMax = function(value, min, max) {
+    if (value === "" || isNaN(value)) {
+	throw "NaN";
+    }
+    var number = parseInt(value);
+    if (number < min) {
+	number = min;
+    } else if (number > max) {
+	number = max;
+    }
+    return number;
+}
+AppStateBinder.prototype.escapeRegex = function(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+AppStateBinder.prototype.buildNumberRegex = function(separators) {
+    var result = "^"
+    if (separators.length > 0) {
+	result += this.escapeRegex(separators[0]);
+	for (var i = 1; i < separators.length; i++) {
+	    result += "(-?\\d+)" + this.escapeRegex(separators[i]);
+	}
+    }
+    return new RegExp(result + "$");
+}
+AppStateBinder.prototype.parseRegex = function(stringValue, regex, attributes) {
+    var matches = stringValue.match(regex);
+    if (matches === null) {
+	return false;
+    }
+    var result = {};
+    for (var i = 1; i < matches.length && i <= attributes.length; i++) {
+	result[attributes[i - 1]] = matches[i];
+    }
+    return result;
+}
+AppStateBinder.prototype.parseIntMinMaxObject = function(theObject, ranges) {
+    try {
+	for ( var key in ranges) {
+	    theObject[key] = this.parseIntMinMax(theObject[key],
+		    ranges[key][0], ranges[key][1]);
+	}
+	return theObject;
+    } catch (err) {
+	return false;
+    }
+}
+AppStateBinder.prototype.parseRegexRanges = function(separators, attributes,
+	ranges) {
+    var regex = this.buildNumberRegex(separators);
+    var that = this;
+    return function(stringValue) {
+	var result = that.parseRegex(stringValue, regex, attributes);
+	if (result === false) {
+	    return false;
+	} else {
+	    return that.parseIntMinMaxObject(result, ranges);
 	}
     }
 }
