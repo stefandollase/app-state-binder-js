@@ -197,6 +197,11 @@ AppStateBinder.prototype.setupAppState = function(parameters) {
 	if (this.knownTypes.hasOwnProperty(parameters[name].type)) {
 	    this.appState[name] = this.knownTypes[parameters[name].type].call(
 		    this, name, parameters[name]);
+	    this.appState[name].name = name;
+	    this.appState[name].type = parameters[name].type;
+	    this.appState[name].changed = parameters[name].changed;
+	    this.appState[name].dataValue = false;
+	    this.appState[name].stringValue = false;
 	} else {
 	    throw "unknown type";
 	}
@@ -205,20 +210,12 @@ AppStateBinder.prototype.setupAppState = function(parameters) {
 AppStateBinder.prototype.knownTypes = {
     custom : function(name, config) {
 	return {
-	    name : name,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : config.parse,
 	    stringify : config.stringify
 	};
     },
     flag : function(name, config) {
 	return {
-	    name : name,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : function(stringValue) {
 		if (stringValue === name) {
 		    return true;
@@ -237,11 +234,7 @@ AppStateBinder.prototype.knownTypes = {
     },
     option : function(name, config) {
 	return {
-	    name : name,
 	    options : config.options,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : function(stringValue) {
 		for (var i = 0; i < config.options.length; i++) {
 		    if (stringValue === config.options[i]) {
@@ -262,10 +255,6 @@ AppStateBinder.prototype.knownTypes = {
     },
     json : function(name, config) {
 	return {
-	    name : name,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : function(stringValue) {
 		try {
 		    return JSON.parse(stringValue);
@@ -288,14 +277,10 @@ AppStateBinder.prototype.knownTypes = {
 	    "result" : [ config.min, config.max ]
 	});
 	return {
-	    name : name,
 	    prefix : config.prefix,
 	    suffix : config.suffix,
 	    min : config.min,
 	    max : config.max,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : function(stringValue) {
 		var result = parseNumberObject(stringValue);
 		if (result === false) {
@@ -315,13 +300,9 @@ AppStateBinder.prototype.knownTypes = {
     },
     numberObject : function(name, config) {
 	return {
-	    name : name,
 	    separators : config.separators,
 	    attributes : config.attributes,
 	    ranges : config.ranges,
-	    dataValue : false,
-	    stringValue : false,
-	    changed : config.changed,
 	    parse : this.parseRegexRanges(config.separators, config.attributes,
 		    config.ranges),
 	    stringify : function(dataValue) {
