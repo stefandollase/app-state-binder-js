@@ -194,6 +194,12 @@ AppStateBinder.prototype.get = function(name, defaultValue) {
 }
 AppStateBinder.prototype.setupAppState = function(parameters) {
     for ( var name in parameters) {
+	if (this.knownTypes.hasOwnProperty(parameters[name].type)) {
+	    this.appState[name] = this.knownTypes[parameters[name].type](name,
+		    parameters[name]);
+	} else {
+	    throw "unknown type";
+	}
 	if (parameters[name].flag) {
 	    this.appState[name] = this.createFlag(name, parameters[name].flag,
 		    parameters[name].changed);
@@ -213,146 +219,149 @@ AppStateBinder.prototype.setupAppState = function(parameters) {
 		    parameters[name].separators, parameters[name].attributes,
 		    parameters[name].ranges, parameters[name].changed)
 	} else {
-	    this.appState[name] = {
-		name : name,
-		dataValue : false,
-		stringValue : false,
-		changed : parameters[name].changed,
-		parse : parameters[name].parse,
-		stringify : parameters[name].stringify
-	    }
 	}
     }
 }
-AppStateBinder.prototype.createFlag = function(name, flag, changed) {
-    return {
-	name : name,
-	flag : flag,
-	dataValue : false,
-	stringValue : false,
-	changed : changed,
-	parse : function(stringValue) {
-	    if (stringValue === flag) {
-		return true;
-	    } else {
-		return false;
-	    }
-	},
-	stringify : function(dataValue) {
-	    if (dataValue === true) {
-		return flag;
-	    } else {
-		return false;
-	    }
-	}
-    }
-}
-AppStateBinder.prototype.createOption = function(name, options, changed) {
-    return {
-	name : name,
-	options : options,
-	dataValue : false,
-	stringValue : false,
-	changed : changed,
-	parse : function(stringValue) {
-	    for (var i = 0; i < options.length; i++) {
-		if (stringValue === options[i]) {
-		    return stringValue;
+AppStateBinder.prototype.knownTypes = {
+    custom : function(name, config) {
+	return {
+	    name : name,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : config.parse,
+	    stringify : config.stringify
+	};
+    },
+    flag : function(name, config) {
+	return {
+	    name : name,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : function(stringValue) {
+		if (stringValue === name) {
+		    return true;
+		} else {
+		    return false;
+		}
+	    },
+	    stringify : function(dataValue) {
+		if (dataValue === true) {
+		    return name;
+		} else {
+		    return false;
 		}
 	    }
-	    return false;
-	},
-	stringify : function(dataValue) {
-	    for (var i = 0; i < options.length; i++) {
-		if (dataValue === options[i]) {
-		    return dataValue;
-		}
-	    }
-	    return false;
 	}
-    }
-}
-AppStateBinder.prototype.createJSON = function(name, changed) {
-    return {
-	name : name,
-	dataValue : false,
-	stringValue : false,
-	changed : changed,
-	parse : function(stringValue) {
-	    try {
-		return JSON.parse(stringValue);
-	    } catch (err) {
-		return false;
-	    }
-	},
-	stringify : function(dataValue) {
-	    if (dataValue === false) {
-		return false;
-	    } else {
-		return JSON.stringify(dataValue);
-	    }
-	}
-    }
-}
-AppStateBinder.prototype.createNumber = function(name, prefix, suffix, min,
-	max, changed) {
-    var parseNumberObject = this.parseRegexRanges([ prefix, suffix ],
-	    [ "result" ], {
-		"result" : [ min, max ]
-	    });
-    return {
-	name : name,
-	prefix : prefix,
-	suffix : suffix,
-	min : min,
-	max : max,
-	dataValue : false,
-	stringValue : false,
-	changed : changed,
-	parse : function(stringValue) {
-	    var result = parseNumberObject(stringValue);
-	    if (result === false) {
-		return false;
-	    } else {
-		return result.result;
-	    }
-	},
-	stringify : function(dataValue) {
-	    if (dataValue === false) {
-		return false;
-	    } else {
-		return prefix + dataValue + suffix;
-	    }
-	}
-    }
-}
-AppStateBinder.prototype.createNumberObject = function(name, separators,
-	attributes, ranges, changed) {
-    return {
-	name : name,
-	separators : separators,
-	attributes : attributes,
-	ranges : ranges,
-	dataValue : false,
-	stringValue : false,
-	changed : changed,
-	parse : this.parseRegexRanges(separators, attributes, ranges),
-	stringify : function(dataValue) {
-	    if (dataValue === false) {
-		return false;
-	    } else {
-		var result = "";
-		if (separators.length > 0) {
-		    result += separators[0];
-		    for (var i = 1; i < separators.length
-			    && i <= attributes.length; i++) {
-			result += dataValue[attributes[i - 1]] + separators[i];
+    },
+    option : function(name, config) {
+	return {
+	    name : name,
+	    options : options,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : function(stringValue) {
+		for (var i = 0; i < config.options.length; i++) {
+		    if (stringValue === config.options[i]) {
+			return stringValue;
 		    }
 		}
-		return result;
+		return false;
+	    },
+	    stringify : function(dataValue) {
+		for (var i = 0; i < config.options.length; i++) {
+		    if (dataValue === config.options[i]) {
+			return dataValue;
+		    }
+		}
+		return false;
 	    }
 	}
-    }
+    },
+    json : function(name, config) {
+	return {
+	    name : name,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : function(stringValue) {
+		try {
+		    return JSON.parse(stringValue);
+		} catch (err) {
+		    return false;
+		}
+	    },
+	    stringify : function(dataValue) {
+		if (dataValue === false) {
+		    return false;
+		} else {
+		    return JSON.stringify(dataValue);
+		}
+	    }
+	}
+    },
+    number : function(name, config) {
+	var parseNumberObject = this.parseRegexRanges([ config.prefix,
+		config.suffix ], [ "result" ], {
+	    "result" : [ config.min, config.max ]
+	});
+	return {
+	    name : name,
+	    prefix : config.prefix,
+	    suffix : config.suffix,
+	    min : config.min,
+	    max : config.max,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : function(stringValue) {
+		var result = parseNumberObject(stringValue);
+		if (result === false) {
+		    return false;
+		} else {
+		    return result.result;
+		}
+	    },
+	    stringify : function(dataValue) {
+		if (dataValue === false) {
+		    return false;
+		} else {
+		    return config.prefix + dataValue + config.suffix;
+		}
+	    }
+	}
+    },
+    numberObject : function(name, config) {
+	return {
+	    name : name,
+	    separators : config.separators,
+	    attributes : config.attributes,
+	    ranges : config.ranges,
+	    dataValue : false,
+	    stringValue : false,
+	    changed : config.changed,
+	    parse : this.parseRegexRanges(config.separators, config.attributes,
+		    config.ranges),
+	    stringify : function(dataValue) {
+		if (dataValue === false) {
+		    return false;
+		} else {
+		    var result = "";
+		    if (config.separators.length > 0) {
+			result += config.separators[0];
+			for (var i = 1; i < config.separators.length
+				&& i <= config.attributes.length; i++) {
+			    result += dataValue[config.attributes[i - 1]]
+				    + config.separators[i];
+			}
+		    }
+		    return result;
+		}
+	    }
+	}
+    },
 }
 AppStateBinder.prototype.parseIntMinMax = function(value, min, max) {
     if (value === "" || isNaN(value)) {
