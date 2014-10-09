@@ -153,8 +153,11 @@ AppStateBinder.prototype.fireChanged = function(name) {
 AppStateBinder.prototype.setStringValue = function(name, stringValue,
 	fireIfUnchanged) {
     var oldStringValue = this.appState[name].stringValue;
-    this.appState[name].stringValue = stringValue;
-    this.appState[name].dataValue = this.appState[name].parse(stringValue);
+    var newDataValue = this.appState[name].parse(stringValue);
+    if (newDataValue !== false) {
+	this.appState[name].dataValue = newDataValue;
+	this.appState[name].stringValue = stringValue;
+    }
     if (fireIfUnchanged || (oldStringValue !== this.appState[name].stringValue)) {
 	this.exportCurrentState();
 	this.fireChanged(name);
