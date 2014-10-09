@@ -195,30 +195,10 @@ AppStateBinder.prototype.get = function(name, defaultValue) {
 AppStateBinder.prototype.setupAppState = function(parameters) {
     for ( var name in parameters) {
 	if (this.knownTypes.hasOwnProperty(parameters[name].type)) {
-	    this.appState[name] = this.knownTypes[parameters[name].type](name,
-		    parameters[name]);
+	    this.appState[name] = this.knownTypes[parameters[name].type].call(
+		    this, name, parameters[name]);
 	} else {
 	    throw "unknown type";
-	}
-	if (parameters[name].flag) {
-	    this.appState[name] = this.createFlag(name, parameters[name].flag,
-		    parameters[name].changed);
-	} else if (parameters[name].option) {
-	    this.appState[name] = this.createOption(name,
-		    parameters[name].option, parameters[name].changed)
-	} else if (parameters[name].json) {
-	    this.appState[name] = this.createJSON(name,
-		    parameters[name].changed)
-	} else if (parameters[name].number) {
-	    this.appState[name] = this.createNumber(name,
-		    parameters[name].prefix, parameters[name].suffix,
-		    parameters[name].min, parameters[name].max,
-		    parameters[name].changed)
-	} else if (parameters[name].numberObject) {
-	    this.appState[name] = this.createNumberObject(name,
-		    parameters[name].separators, parameters[name].attributes,
-		    parameters[name].ranges, parameters[name].changed)
-	} else {
 	}
     }
 }
@@ -258,7 +238,7 @@ AppStateBinder.prototype.knownTypes = {
     option : function(name, config) {
 	return {
 	    name : name,
-	    options : options,
+	    options : config.options,
 	    dataValue : false,
 	    stringValue : false,
 	    changed : config.changed,
