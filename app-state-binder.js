@@ -160,9 +160,9 @@ AppStateBinder.prototype.set = function(name, dataValue, fireIfUnchanged) {
     }
 }
 AppStateBinder.prototype.toggle = function(name) {
-    if (this.appState[name].flag !== undefined) {
+    if (this.appState[name].type === "flag") {
 	this.set(name, !this.isSet(name));
-    } else if (this.appState[name].options !== undefined) {
+    } else if (this.appState[name].type === "option") {
 	var options = this.appState[name].options;
 	var index = this.indexOf(options, this.get(name));
 	var newIndex = (index + 1) % options.length;
