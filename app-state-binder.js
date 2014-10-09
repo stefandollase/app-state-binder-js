@@ -150,6 +150,16 @@ AppStateBinder.prototype.fireChanged = function(name) {
 	this.appState[name].changed(this.get(name));
     }
 }
+AppStateBinder.prototype.setStringValue = function(name, stringValue,
+	fireIfUnchanged) {
+    var oldStringValue = this.appState[name].stringValue;
+    this.appState[name].stringValue = stringValue;
+    this.appState[name].dataValue = this.appState[name].parse(stringValue);
+    if (fireIfUnchanged || (oldStringValue !== this.appState[name].stringValue)) {
+	this.exportCurrentState();
+	this.fireChanged(name);
+    }
+}
 AppStateBinder.prototype.set = function(name, dataValue, fireIfUnchanged) {
     var oldStringValue = this.appState[name].stringValue;
     this.appState[name].dataValue = dataValue;
@@ -182,6 +192,15 @@ AppStateBinder.prototype.unset = function(name) {
 }
 AppStateBinder.prototype.isSet = function(name) {
     return (this.appState[name].dataValue !== false);
+}
+AppStateBinder.prototype.getStringValue = function(name, defaultStringValue) {
+    if (this.isSet(name)) {
+	return this.appState[name].stringValue;
+    } else if (defaultStringValue === undefined) {
+	return false;
+    } else {
+	return defaultStringValue;
+    }
 }
 AppStateBinder.prototype.get = function(name, defaultValue) {
     if (this.isSet(name)) {
