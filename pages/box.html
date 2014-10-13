@@ -76,7 +76,7 @@ menuOrder: 1
 	  var newGap = getUIGap();
       var currentGap = getBinderGap();
       if (newGap !== 0 || currentGap !== 0) {
-        binder.set("gap", newGap);
+        binder.setStringValue("gap", newGap + "px");
       }
     });
     
