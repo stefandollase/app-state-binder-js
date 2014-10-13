@@ -64,13 +64,11 @@ binder.isSet("showGrid");
 
 ### Use it on your website
 
-We provide the library via the following URL:
-
 ```html
 <script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
 ```
 
-You may want to choose a specific version, other that latest.
+You may want to wait for the first stable release.
 
 ### License
 
