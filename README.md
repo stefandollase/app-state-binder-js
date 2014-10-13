@@ -1,7 +1,10 @@
 Application State Binder
 ===================
 
-Javascript library to reveal the application state in the hash of the url. There are flags, options, json data and custom state entries ([demo](http://stefandollase.github.io/app-state-binder-js/)).
+Javascript library to reveal the application state in the hash of the url.
+There are flags, options, json data and custom state entries
+([demo](http://stefandollase.github.io/app-state-binder-js/) | 
+[sources](https://github.com/stefandollase/app-state-binder-js/tree/gh-pages/demos/)).
 
 ### Example
 
@@ -35,7 +38,7 @@ var binder = new AppStateBinder({
 });
 ```
 
-To offer the user a way to change the application state you can put these links on your website:
+To offer the user a way to change the application state you can put these links like these on your website:
 
 ```html
 <a href="#light|showGrid">Select Light Theme with Grid</a>
