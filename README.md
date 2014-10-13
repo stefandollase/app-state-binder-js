@@ -3,8 +3,8 @@ Application State Binder
 
 Javascript library to reveal the application state in the hash of the url.
 There are flags, options, json data and custom state entries
-([demo](http://stefandollase.github.io/app-state-binder-js/) | 
-[sources](https://github.com/stefandollase/app-state-binder-js/tree/gh-pages/demos/)).
+([view demo sources](https://github.com/stefandollase/app-state-binder-js/tree/gh-pages/demos/) | 
+[view demo](http://stefandollase.github.io/app-state-binder-js/)).
 
 ### Example
 
