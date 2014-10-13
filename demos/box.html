@@ -4,91 +4,90 @@ title: Box Example
 permalink: /box/
 ---
 <h1>Flag, Option and Number State Entry Example</h1>
-  <form>
-    <label><input class="showBox" type="checkbox" />Show Box</label>
-    <label>Box Color
-      <select class="input boxColor">
-        <option value="red">Red</option>
-        <option value="green">Green</option>
-        <option value="blue">Blue</option>
-        <option value="yellow">Yellow</option>
-      </select>
-    </label>
-    <label>Left Margin (px)<input class="gap" type="text" /></label>
-  </form>
-  
-  <div class="theBox" style="width:100px;height:100px;border:1px solid black"></div>
 
-  <script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
-  <script>
-    var binder = new AppStateBinder({
-      showBox: {
-	  	type: "flag",
-        changed: function(dataValue) {
-          html.showBox.prop("checked", dataValue);
-          html.theBox.css("visibility", dataValue ? "visible" : "hidden");
-        }
-      },
-      boxColor: {
-	  	type: "option",
-        options: [ "red", "green", "blue", "yellow" ],
-        changed: function(dataValue) {
-          var boxColor = dataValue || "red";
-          html.boxColor.val(boxColor);
-          html.theBox.css("background-color", boxColor);
-        }
-      },
-      gap: {
-	    type : "number",
-	    prefix : "",
-	    suffix : "px",
-	    min : -1000,
-	    max : 1000,
-        changed : function(dataValue) {
-  	      var newGap = getBinderGap();
-          var currentGap = getUIGap();
-          html.theBox.css("margin-left", newGap + "px");
-  	      if (newGap !== 0 || currentGap !== 0) {
-            html.gap.val(newGap);
-  	      }
-        },
-      },
-    });
-    
-    var html = {
-      showBox: $(".showBox"),
-      boxColor: $(".boxColor"),
-      gap: $(".gap"),
-      theBox: $(".theBox"),
-    };
-    html.showBox.change(function() {
-      binder.set("showBox", $(this).prop("checked"));
-    });
-    html.boxColor.change(function() {
-      binder.set("boxColor", $(this).val());
-    });
-    html.gap.keyup(function() {
-	  var newGap = getUIGap();
-      var currentGap = getBinderGap();
-      if (newGap !== 0 || currentGap !== 0) {
-        binder.setStringValue("gap", newGap + "px");
+<form>
+  <label><input class="showBox" type="checkbox" />Show Box</label> <label>Box
+    Color <select class="input boxColor">
+      <option value="red">Red</option>
+      <option value="green">Green</option>
+      <option value="blue">Blue</option>
+      <option value="yellow">Yellow</option>
+  </select>
+  </label> <label>Left Margin (px)<input class="gap" type="text" /></label>
+</form>
+
+<div class="theBox" style="width: 100px; height: 100px; border: 1px solid black"></div>
+
+<script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder.latest.min.js"></script>
+<script>
+  var binder = new AppStateBinder({
+    showBox: {
+      type: "flag",
+      changed: function(dataValue) {
+        html.showBox.prop("checked", dataValue);
+        html.theBox.css("visibility", dataValue ? "visible" : "hidden");
       }
-    });
-    
-    function getUIGap() {
-      var value = html.gap.val();
-      if (value !== "") {
-        try {
-            return parseInt(value);
-        } catch (err) {
-        }
+    },
+    boxColor: {
+      type: "option",
+      options: [ "red", "green", "blue", "yellow" ],
+      changed: function(dataValue) {
+        var boxColor = dataValue || "red";
+        html.boxColor.val(boxColor);
+        html.theBox.css("background-color", boxColor);
       }
-      return 0;
+    },
+    gap: {
+      type : "number",
+      prefix : "",
+      suffix : "px",
+      min : -1000,
+      max : 1000,
+      changed : function(dataValue) {
+        var newGap = getBinderGap();
+        var currentGap = getUIGap();
+        html.theBox.css("margin-left", newGap + "px");
+        if (newGap !== 0 || currentGap !== 0) {
+          html.gap.val(newGap);
+        }
+      },
+    },
+  });
+  
+  var html = {
+    showBox: $(".showBox"),
+    boxColor: $(".boxColor"),
+    gap: $(".gap"),
+    theBox: $(".theBox"),
+  };
+  html.showBox.change(function() {
+    binder.set("showBox", $(this).prop("checked"));
+  });
+  html.boxColor.change(function() {
+    binder.set("boxColor", $(this).val());
+  });
+  html.gap.keyup(function() {
+    var newGap = getUIGap();
+    var currentGap = getBinderGap();
+    if (newGap !== 0 || currentGap !== 0) {
+      binder.setStringValue("gap", newGap + "px");
     }
-	    
-    function getBinderGap() {
-      return binder.get("gap") || 0;
+  });
+  
+  function getUIGap() {
+    var value = html.gap.val();
+    if (value !== "") {
+      try {
+        return parseInt(value);
+      } catch (err) {
+      }
     }
-	    
-    binder.fireChangedForAll();
-  </script>
+    return 0;
+  }
+      
+  function getBinderGap() {
+    return binder.get("gap") || 0;
+  }
+      
+  binder.fireChangedForAll();
+</script>
