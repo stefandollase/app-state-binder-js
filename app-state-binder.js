@@ -156,7 +156,8 @@ AppStateBinder.prototype.setStringValue = function(name, stringValue,
     var newDataValue = this.appState[name].parse(stringValue);
     if (newDataValue !== false) {
 	this.appState[name].dataValue = newDataValue;
-	this.appState[name].stringValue = stringValue;
+	this.appState[name].stringValue = this.appState[name]
+		.stringify(newDataValue);
     }
     if (fireIfUnchanged || (oldStringValue !== this.appState[name].stringValue)) {
 	this.exportCurrentState();
