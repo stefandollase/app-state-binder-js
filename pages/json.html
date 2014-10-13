@@ -19,7 +19,7 @@ menuOrder: 2
   <script>
     var binder = new AppStateBinder({
       list: {
-      json: "json",
+      	type: "json",
         changed : function(dataValue) {
           console.log(dataValue);
           html.list.empty();

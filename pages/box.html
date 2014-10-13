@@ -28,14 +28,15 @@ menuOrder: 1
   <script>
     var binder = new AppStateBinder({
       showBox: {
-        flag: "showBox",
+	  	type: "flag",
         changed: function(dataValue) {
           html.showBox.prop("checked", dataValue);
           html.theBox.css("visibility", dataValue ? "visible" : "hidden");
         }
       },
       boxColor: {
-        option: [ "red", "green", "blue", "yellow" ],
+	  	type: "option",
+        options: [ "red", "green", "blue", "yellow" ],
         changed: function(dataValue) {
           var boxColor = dataValue || "red";
           html.boxColor.val(boxColor);
@@ -43,24 +44,11 @@ menuOrder: 1
         }
       },
       gap: {
-        parse: function(stringValue) {
-          if (stringValue.indexOf("px") < 0) {
-            return false;
-          }
-          try {
-            var propertyArray = stringValue.split("px");
-            if ((propertyArray.length !== 2) || (propertyArray[1] !== "")) {
-              return false;
-            }
-            return parseInt(propertyArray[0]);
-          } catch (err) {
-            return false;
-          }
-        },
-        stringify: function(dataValue) {
-          var gap = dataValue || 0;
-          return gap + "px"
-        },
+	    type : "number",
+	    prefix : "",
+	    suffix : "px",
+	    min : -1000,
+	    max : 1000,
         changed : function(dataValue) {
   	      var newGap = getBinderGap();
           var currentGap = getUIGap();
