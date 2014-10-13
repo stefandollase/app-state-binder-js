@@ -10,7 +10,8 @@ Imagine an application that draws something on a canvas. Such an application can
 ```js
 var binder = new AppStateBinder({
   theme : {
-    option : [ "light", "dark" ],
+    type : "option",
+    options : [ "light", "dark" ],
     changed : function(dataValue) {
       var theme = "light";
       if (dataValue === false) { 
@@ -22,7 +23,7 @@ var binder = new AppStateBinder({
     }
   },
   showGrid : {
-    flag : "showGrid",
+    type : "flag",
     changed : function() {
       if (dataValue) {
         console.log("drawing grid");
