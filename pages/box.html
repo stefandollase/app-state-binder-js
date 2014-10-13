@@ -2,25 +2,20 @@
 layout: default
 title: Box Example
 permalink: /box/
-menuOrder: 1
 ---
-<h1>Flag, Option and Custom State Entry Example</h1>
-  <ul style="display:block;">
-    <li>
-      <label><input class="showBox" type="checkbox" />show box</label>
-    </li>
-    <li>
-      <select class="boxColor">
+<h1>Flag, Option and Number State Entry Example</h1>
+  <form>
+    <label><input class="showBox" type="checkbox" />Show Box</label>
+    <label>Box Color
+      <select class="input boxColor">
         <option value="red">Red</option>
         <option value="green">Green</option>
         <option value="blue">Blue</option>
         <option value="yellow">Yellow</option>
       </select>
-    </li>
-    <li>
-      <label>gap: <input class="gap" type="text" /> px</label>
-    </li>
-  </ul>
+    </label>
+    <label>Left Margin (px)<input class="gap" type="text" /></label>
+  </form>
   
   <div class="theBox" style="width:100px;height:100px;border:1px solid black"></div>
 

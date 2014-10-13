@@ -2,15 +2,14 @@
 layout: default
 title: JSON Example
 permalink: /json/
-menuOrder: 2
 ---
 <h1>JSON State Entry Example</h1>
-  <div>
-    <label>key: <input class="list-key" type="text" /></label>
-    <label>value: <input class="list-value" type="text" /></label>
-    <button class="add-to-list">add</button>
-    <button class="clear-list">clear list</button>
-  </div>
+  <form>
+    <label>Key <input class="list-key" type="text" /></label>
+    <label>Value <input class="list-value" type="text" /></label>
+    <input class="add-to-list" type="submit" value="Add Pair" />
+    <button class="clear-list">Clear List</button>
+  </form>
 
   <ul class="list">
   </ul>
@@ -43,6 +42,7 @@ menuOrder: 2
       var list = binder.get("list") || {};
       list[html.listKey.val()] = html.listValue.val();
       binder.set("list", list);
+      return false;
     });
     html.clearList.click(function() {
       binder.unset("list");
