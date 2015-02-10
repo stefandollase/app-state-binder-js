@@ -69,7 +69,7 @@ binder.isSet("showGrid");
 ### Use it on your website
 
 ```html
-<script src="http://stefandollase.github.io/app-state-binder-js/cdn/app-state-binder-1.0.min.js"></script>
+<script src="http://stefandollase.github.io/app-state-binder-js/cdn/1.1/app-state-binder.min.js"></script>
 ```
 
 ### License
