@@ -4,7 +4,7 @@ Application State Binder
 Javascript library to reveal the application state in the hash of the url.
 There are flags, options, json data and custom state entries
 ([view demo sources](https://github.com/stefandollase/app-state-binder-js/tree/gh-pages/demos/) | 
-[view demo](http://stefandollase.github.io/app-state-binder-js/)).
+[view demo](https://stefandollase.github.io/app-state-binder-js/)).
 
 ### Example
 
@@ -69,7 +69,7 @@ binder.isSet("showGrid");
 ### Use it on your website
 
 ```html
-<script src="http://stefandollase.github.io/app-state-binder-js/cdn/1.1/app-state-binder-js.min.js"></script>
+<script src="https://stefandollase.github.io/app-state-binder-js/cdn/1.1/app-state-binder-js.min.js"></script>
 ```
 
 ### License
